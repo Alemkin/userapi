@@ -18,11 +18,21 @@ func main() {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	
-	e.GET("/status", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, Response{Status: "OKAY"})
-	})
-	e.GET("/user", CreateUser)
+
+	e.GET("/status", status)
+
+	userRoutes(e)
 	
 	e.Logger.Fatal(e.Start(":8081"))
+}
+
+func userRoutes(e *echo.Echo) {
+	e.POST("/user", CreateUser)
+	e.PUT("/user/:id", UpdateUser)
+	e.GET("/user/:id", GetUser)
+	e.DELETE("/user/:id", DeleteUser)
+}
+
+func status(c echo.Context) error {
+	return c.JSON(http.StatusOK, Response{Status: "OKAY"})
 }
